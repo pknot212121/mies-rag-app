@@ -27,6 +27,8 @@ Create a `.env` file in the root directory of the project. This file must contai
 
     OPENAI_API_KEY=
     LLAMA_PARSE_API_KEY=
+
+    FRONTEND_ADMIN_PASSWORD=
     ```
 
 2. **Run the Application**  
