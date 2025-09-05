@@ -9,8 +9,7 @@ import re
 import shutil
 
 
-key = "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"
-gemini_api_key = "AIzaSyBmzVl9q1LxLYa38Hw8yeT66e_07tE0GzY"
+
 def encode_image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
