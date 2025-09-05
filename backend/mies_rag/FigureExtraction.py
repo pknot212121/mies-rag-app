@@ -8,7 +8,7 @@ from google.genai import types
 import re
 import shutil
 
-
+gemini_api_key=os.getenv("GEMINI_API_KEY")
 
 def encode_image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
@@ -22,42 +22,6 @@ def get_figures_and_tables_from_papers(output,full_path):
     if os.path.isfile(full_path):
         scipdf.parse_figures(full_path, output_folder=output)
         print(full_path + " finished")
-
-def analyze_figures_and_tables(folder):
-    client = OpenAI(
-                base_url="https://openrouter.ai/api/v1",
-                api_key=key,
-            )
-    for filename in os.listdir(folder):
-        full_path = os.path.join(folder, filename)
-        if os.path.isfile(full_path):
-            image_path = full_path
-            base64_image = encode_image_to_base64(image_path)
-            data_url = f"data:image/png;base64,{base64_image}"
-
-            completion = client.chat.completions.create(
-            extra_body={},
-            model="google/gemma-3-27b-it:free",
-            messages=[
-                {
-                "role": "user",
-                "content": [
-                    {
-                    "type": "text",
-                    "text": "What is in this image?"
-                    },
-                    {
-                    "type": "image_url",
-                    "image_url": {
-                                "url": data_url
-                            }
-                    }
-                ]
-                }
-            ]
-            )
-            print(completion.choices[0].message.content)
-            print(full_path + " finished")
 
 def analyze_figures_and_tables_with_gemma(folder):
     client = genai.Client(api_key=gemini_api_key)

@@ -5,6 +5,9 @@ from llama_index.core.node_parser import MarkdownElementNodeParser
 from llama_index.core import VectorStoreIndex, StorageContext, get_response_synthesizer, load_index_from_storage
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
+from grobidsegmtest import *
+from FigureExtraction import *
+from llama_index.core.schema import Document
 
 
 class VectorQueryEngineCreator:
@@ -13,19 +16,24 @@ class VectorQueryEngineCreator:
         self.input_path = input_path
 
     def parse_pdf_to_nodes(self, path_to_pdf):
-        documents = LlamaParse(
-            api_key=os.getenv("LLAMA_PARSE_API_KEY"),
-            result_type="markdown"
-        ).load_data(path_to_pdf)
+        # documents = LlamaParse(
+        #     api_key=os.getenv("LLAMA_PARSE_API_KEY"),
+        #     result_type="markdown"
+        # ).load_data(path_to_pdf)
+        texts_from_grobid = segment_with_grobid(path_to_pdf)
+        documents = [Document(text=text) for text in texts_from_grobid]
+        # Remove chapters containing references
+        documents = [doc for doc in documents if 'references' not in doc.text.lower()]
+        get_figures_and_tables_from_papers("outputs",path_to_pdf)
+        additional_texts = analyze_figures_and_tables_with_gemma("outputs/figures")
+        additional_docs = [Document(text=text) for text in additional_texts]
+        all_docs = documents + additional_docs
         node_parser = MarkdownElementNodeParser(
             llm=OpenAI(model=self.model), num_workers=8
         )
-        nodes = node_parser.get_nodes_from_documents(documents)
+        nodes = node_parser.get_nodes_from_documents(all_docs)
         
-        # Remove chapters containing references
-        documents = [doc for doc in documents if 'references' not in doc.text.lower()]
-
-        return documents, node_parser, nodes
+        return all_docs, node_parser, nodes
 
     def create_vector_index(self, documents, node_parser, nodes):
         base_nodes, objects = node_parser.get_nodes_and_objects(nodes)
