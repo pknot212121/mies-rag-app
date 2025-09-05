@@ -1,3 +1,8 @@
+git+https://github.com/titipata/scipdf_parser.git
+lxml
+openpyxl
+jsonpath_ng
+google-genai
 fastapi
 uvicorn
 sqlalchemy
@@ -26,3 +31,4 @@ langchain
 langchain-openai
 langchain-groq
 nest-asyncio
+
