@@ -53,6 +53,11 @@ services:
     image: redis:alpine
     ports:
       - "6379:6379"
+  
+  grobid:
+    image: lfoppiano/grobid:0.8.0-full
+    ports:
+      - "8070:8070"
 
 volumes:
   postgres_data:

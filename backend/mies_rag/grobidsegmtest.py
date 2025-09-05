@@ -2,7 +2,7 @@ import requests
 import os
 from lxml import etree
 
-GROBID_URL = "http://localhost:8070"
+GROBID_URL = "http://grobid:8070"
 FULLTEXT_ENDPOINT = "/api/processFulltextDocument"
 
 
