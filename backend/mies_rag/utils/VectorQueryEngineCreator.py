@@ -15,11 +15,14 @@ class VectorQueryEngineCreator:
         self.model = model
         self.input_path = input_path
 
+
+    '''
+    The function first segments text in the pdf with grobid,
+    Then it searches for all the figures and tables also using grobid
+    And it generates image descriptions with gemma which it later adds to documents
+    '''
     def parse_pdf_to_nodes(self, path_to_pdf):
-        # documents = LlamaParse(
-        #     api_key=os.getenv("LLAMA_PARSE_API_KEY"),
-        #     result_type="markdown"
-        # ).load_data(path_to_pdf)
+        
         texts_from_grobid = segment_with_grobid(path_to_pdf)
         documents = [Document(text=text) for text in texts_from_grobid]
         # Remove chapters containing references
