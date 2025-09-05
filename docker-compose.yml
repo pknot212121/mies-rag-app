@@ -55,7 +55,7 @@ services:
       - "6379:6379"
   
   grobid:
-    image: lfoppiano/grobid:0.8.0-full
+    image: grobid/grobid:0.8.2-full
     ports:
       - "8070:8070"
 
